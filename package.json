@@ -1,0 +1,19 @@
+﻿{
+  "name": "meet-translator",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Google Meet canli ceviri Chrome uzantisi",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node scripts/test.mjs",
+    "test:live": "node scripts/live.mjs"
+  },
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}

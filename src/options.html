@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meet Canlı Çeviri – Ayarlar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px 16px 48px; background: #f1f3f6; color: #111827;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+    .card {
+      max-width: 560px; margin: 0 auto 16px; background: #fff; border-radius: 18px;
+      padding: 24px 28px 26px; box-shadow: 0 1px 3px rgba(17, 24, 39, 0.08);
+    }
+    h1 { margin: 0 0 4px; font-size: 20px; }
+    h2 {
+      margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #6b7280;
+    }
+    .lead { margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5; }
+    label { display: block; margin: 16px 0 6px; font-size: 13px; font-weight: 600; }
+    input[type=text], input[type=password], select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px;
+      background: #f9fafb; font: 14px "Segoe UI", system-ui, sans-serif; color: #111827;
+    }
+    textarea { min-height: 84px; resize: vertical; line-height: 1.4; }
+    input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid #f97316; outline-offset: 1px; }
+    .check { display: flex; gap: 10px; align-items: flex-start; margin: 16px 0 0; font-weight: 600; font-size: 13px; cursor: pointer; }
+    .check input { margin: 2px 0 0; accent-color: #f97316; width: 16px; height: 16px; flex: none; }
+    .check small { display: block; font-weight: 400; color: #6b7280; margin-top: 2px; line-height: 1.4; }
+    .hint { margin: 6px 0 0; font-size: 12px; color: #6b7280; line-height: 1.45; }
+    .env { color: #15803d; font-weight: 600; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+    .row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; max-width: 560px; margin: 0 auto; }
+    button {
+      padding: 11px 22px; border: 0; border-radius: 10px; background: #f97316; color: #fff;
+      font: 700 14px "Segoe UI", system-ui, sans-serif; cursor: pointer;
+    }
+    button:hover { background: #ea580c; }
+    button.secondary { background: #fff; color: #ea580c; border: 1px solid #fdba74; }
+    button.secondary:hover { background: #fff7ed; }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    #saved { font-size: 13px; font-weight: 600; color: #16a34a; opacity: 0; transition: opacity 0.2s; }
+    #saved.show { opacity: 1; }
+    #results { max-width: 560px; margin: 12px auto 0; padding: 0; list-style: none; font-size: 13px; }
+    #results li { padding: 6px 0; }
+    #results .ok { color: #15803d; }
+    #results .bad { color: #dc2626; }
+    #results .warn { color: #b45309; }
+    @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <form id="form" autocomplete="off">
+    <section class="card">
+      <h1>Ayarlar</h1>
+      <p class="lead">Anahtarlar yalnızca bu tarayıcıda saklanır ve sadece kendi servislerine (ElevenLabs, Anthropic) gönderilir. Proje klasöründeki <b>.env</b> dosyasına yazıp <code>npm run build</code> çalıştırdıysanız buradaki alanları boş bırakabilirsiniz; burada girilen değer .env'deki değerin önüne geçer.</p>
+    </section>
+
+    <section class="card">
+      <h2>API anahtarları</h2>
+      <label for="elevenKey">ElevenLabs API anahtarı</label>
+      <input type="password" id="elevenKey" spellcheck="false" autocomplete="off">
+      <p class="hint" id="elevenKeyEnv" hidden><span class="env">✓ .env dosyasından yüklendi.</span> Boş bırakırsanız o kullanılır.</p>
+
+      <label for="anthropicKey">Anthropic API anahtarı</label>
+      <input type="password" id="anthropicKey" spellcheck="false" autocomplete="off">
+      <p class="hint" id="anthropicKeyEnv" hidden><span class="env">✓ .env dosyasından yüklendi.</span> Boş bırakırsanız o kullanılır.</p>
+    </section>
+
+    <section class="card">
+      <h2>Çeviri</h2>
+      <label for="claudeModel">Claude modeli</label>
+      <select id="claudeModel">
+        <option value="claude-haiku-5-5">Haiku 5.5 – en hızlı, en ucuz (önerilen)</option>
+        <option value="claude-opus-5-5">Opus 5.5 – en yüksek kalite; hızlı modla Haiku kadar hızlı, daha pahalı</option>
+        <option value="claude-sonnet-5-5">Sonnet 5.5 – kaliteli ama daha yavaş</option>
+        <option value="claude-fable-5-2">Fable 5.2 – en güçlü, en yavaş</option>
+      </select>
+      <p class="hint">Ölçülen ilk kelime süresi: Haiku 5.5 ~0,6 sn · Opus 5.5 + hızlı mod ~0,7 sn · Sonnet 5.5 ~1,8 sn · Opus 5.5 ~1,9 sn.</p>
+
+      <label class="check"><input type="checkbox" id="fastMode">
+        <span>Hızlı mod<small>Yalnızca Opus 5.5 ve Fable 5.2 seçiliyken geçerlidir: yanıtı yaklaşık 3 kat hızlandırır, Claude ücreti yaklaşık 2 katına çıkar. Haiku 5.5 ve Sonnet 5.5'te etkisi yoktur.</small></span>
+      </label>
+      <label class="check"><input type="checkbox" id="liveDrafts">
+        <span>Anlık taslak altyazı<small>Karşı taraf konuşurken İngilizce altyazıyı Haiku 5.5 ile anında gösterir; cümle bitince seçili model kesin çeviriyi yazar.</small></span>
+      </label>
+
+      <div class="two">
+        <div>
+          <label for="formality">Hitap şekli</label>
+          <select id="formality">
+            <option value="formal">Resmî (siz, Sie, vous…)</option>
+            <option value="informal">Samimi (sen, du, tu…)</option>
+          </select>
+        </div>
+        <div>
+          <label for="speakerGender">Dilbilgisi cinsiyetiniz</label>
+          <select id="speakerGender">
+            <option value="">Belirtme</option>
+            <option value="male">Eril</option>
+            <option value="female">Dişil</option>
+          </select>
+        </div>
+      </div>
+      <p class="hint">Bazı dillerde "ben yorgunum" gibi cümleler konuşanın cinsiyetine göre değişir (ör. İspanyolca <i>cansado/cansada</i>, Rusça <i>устал/устала</i>). Doğru çeviri için seçebilirsiniz.</p>
+
+      <label for="glossary">Özel isimler ve terimler</label>
+      <textarea id="glossary" spellcheck="false" placeholder="Her satıra bir terim&#10;Car Studio AI&#10;Kerem"></textarea>
+      <p class="hint">Kişi, şirket ve ürün adlarını yazın: konuşma tanıma bunları daha iyi duyar, çeviri onları olduğu gibi korur (en fazla 50 terim tanımaya gönderilir, 20 karakterden uzunlar yalnızca çeviride kullanılır).</p>
+    </section>
+
+    <section class="card">
+      <h2>Ses</h2>
+      <div class="two">
+        <div>
+          <label for="ttsModel">Ses (TTS) modeli</label>
+          <select id="ttsModel">
+            <option value="eleven_v4_turbo">v4 Turbo – önerilen</option>
+            <option value="eleven_flash_v2_5">Flash v2.5 – en düşük gecikme</option>
+            <option value="eleven_v3">v3 – en doğal, daha yavaş</option>
+          </select>
+        </div>
+        <div>
+          <label for="originalVoice">Orijinal sesiniz</label>
+          <select id="originalVoice">
+            <option value="off">Kapalı (karşı taraf yalnızca çeviriyi duyar)</option>
+            <option value="low">Kısık (çevirinin altında hafifçe duyulur)</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="voiceId">Ses kimliği (Voice ID)</label>
+      <input type="text" id="voiceId" spellcheck="false" autocomplete="off">
+      <p class="hint" id="voiceIdEnv" hidden><span class="env">✓ .env dosyasından yüklendi.</span></p>
+      <p class="hint">Kendi sesinizle konuşmak için ElevenLabs'te oluşturduğunuz anlık ses klonunun (Instant Voice Clone) kimliğini girin.</p>
+
+      <label for="incomingSource">Karşı tarafın sesi nereden alınsın?</label>
+      <select id="incomingSource">
+        <option value="tab">Sekme sesinden (önerilen, en güvenilir)</option>
+        <option value="page">Meet bağlantısından (deneysel)</option>
+      </select>
+      <p class="hint">Sekme sesi modunda toplantı sesi çeviri sırasında Windows'un varsayılan ses çıkışından gelir. Meet'te başka bir hoparlör/kulaklık seçtiyseniz, Windows'ta da onu varsayılan yapın.</p>
+
+      <label class="check"><input type="checkbox" id="headphones">
+        <span>Kulaklık kullanıyorum (yankı korumasını kapat)<small>Kulaklıkla karşı tarafın sesi mikrofona kaçmaz; koruma kapalıyken aynı anda konuşsanız da sözleriniz çevrilir.</small></span>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Altyazı</h2>
+      <div class="two">
+        <div>
+          <label for="captionSize">Yazı boyutu</label>
+          <select id="captionSize">
+            <option value="s">Küçük</option>
+            <option value="m">Orta</option>
+            <option value="l">Büyük</option>
+          </select>
+        </div>
+        <div>
+          <label class="check" style="margin-top: 40px"><input type="checkbox" id="showLatency">
+            <span>Gecikmeyi göster</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <div class="row">
+      <button type="submit">Kaydet</button>
+      <button type="button" class="secondary" id="test">Bağlantıyı test et</button>
+      <span id="saved" role="status">Kaydedildi</span>
+    </div>
+    <ul id="results" aria-live="polite"></ul>
+  </form>
+  <script src="defaults.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
